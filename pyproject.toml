@@ -27,6 +27,7 @@ line-length = 100
 
 [tool.flake8]
 max-line-length = 100
+exclude = [".venv", ".mypy_cache", "pytest_cache", "*__pycache__"]
 
 [tool.isort]
 atomic = true
