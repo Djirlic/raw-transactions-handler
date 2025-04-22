@@ -3,11 +3,24 @@ name = "raw-transactions-handler"
 version = "0.1.0"
 description = "Used by an AWS Lambda function to run on raw creditcard transaction data to check for quality and transform to Parquet format."
 readme = "README.md"
+authors = [
+    { name = "Manuel Djirlic" }
+]
 requires-python = ">=3.13"
 dependencies = [
     "boto3>=1.38.0",
 ]
 classifiers = ["Private :: Do Not Upload"]
+
+[project.scripts]
+raw-transactions-handler = "handler:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/handler"]
 
 [tool.black]
 line-length = 100
@@ -20,6 +33,11 @@ atomic = true
 profile = "black"
 line_length = 100
 skip_gitignore = true
+
+[tool.uv.workspace]
+members = [
+    "handler",
+]
 
 [dependency-groups]
 dev = [
