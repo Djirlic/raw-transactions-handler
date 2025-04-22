@@ -1,7 +1,34 @@
 [project]
 name = "raw-transactions-handler"
 version = "0.1.0"
-description = "Add your description here"
+description = "Used by an AWS Lambda function to run on raw creditcard transaction data to check for quality and transform to Parquet format."
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "boto3>=1.38.0",
+]
+classifiers = ["Private :: Do Not Upload"]
+
+[tool.black]
+line-length = 100
+
+[tool.flake8]
+max-line-length = 100
+
+[tool.isort]
+atomic = true
+profile = "black"
+line_length = 100
+skip_gitignore = true
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "flake8>=7.2.0",
+    "flake8-pyproject>=1.2.3",
+    "isort>=6.0.1",
+    "mypy>=1.15.0",
+    "pre-commit>=4.2.0",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
+]
