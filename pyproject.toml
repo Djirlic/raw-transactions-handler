@@ -21,6 +21,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/handler"]
+include = ["src/handler/py.typed"]
 
 [tool.black]
 line-length = 100
