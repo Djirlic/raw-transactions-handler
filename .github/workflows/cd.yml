@@ -51,7 +51,6 @@ jobs:
             --compatible-runtimes python3.13 \
             --region $AWS_REGION \
             --query Version --output text)
-            --output none
 
             echo "LAYER_VERSION=$LAYER_VERSION" >> $GITHUB_ENV
 
@@ -74,15 +73,12 @@ jobs:
             --function-name CreditCardTransactionsQualityGateFunction \
             --region $AWS_REGION \
             --zip-file fileb://function.zip
-            --output none
 
           aws lambda wait function-updated \
             --function-name CreditCardTransactionsQualityGateFunction \
             --region $AWS_REGION
-            --output none
 
           aws lambda update-function-configuration \
             --function-name CreditCardTransactionsQualityGateFunction \
             --region $AWS_REGION \
             --layers arn:aws:lambda:$AWS_REGION:${{ secrets.AWS_ACCOUNT_ID }}:layer:CreditCardTransactionsQualityGateDependencies:$LAYER_VERSION
-            --output none
