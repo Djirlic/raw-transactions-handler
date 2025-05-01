@@ -1,4 +1,5 @@
 import logging
+import sys
 import urllib.parse
 
 import handler.storage as storage
@@ -8,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def handle_event(event, context) -> None:
+    logger.info("sys.path =", sys.path)
     logger.info("Starting event handling")
     record = event.get("Records", [{}])[0]
     logger.info(f"Processing record: {record}")
