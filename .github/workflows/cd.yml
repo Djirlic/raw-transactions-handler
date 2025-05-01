@@ -31,7 +31,9 @@ jobs:
         run: |
           mkdir -p layer/python
           pip install -r requirements-layer.txt -t layer/python
+          cd layer
           zip -r ../layer.zip python/
+          cd ..
 
       - name: Publish Lambda Layer
         env:
