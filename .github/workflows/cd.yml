@@ -44,9 +44,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.LAYER_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          echo "ACCOUNT_ID=$ACCOUNT_ID" >> $GITHUB_ENV
-
           LAYER_VERSION=$(aws lambda publish-layer-version \
             --layer-name CreditCardTransactionsQualityGateDependencies \
             --description "Dependencies for Credit Card Quality Gate Function" \
@@ -77,7 +74,11 @@ jobs:
             --region $AWS_REGION \
             --zip-file fileb://function.zip
 
+          aws lambda wait function-updated \
+            --function-name CreditCardTransactionsQualityGateFunction \
+            --region $AWS_REGION
+
           aws lambda update-function-configuration \
             --function-name CreditCardTransactionsQualityGateFunction \
             --region $AWS_REGION \
-            --layers arn:aws:lambda:$AWS_REGION:$ACCOUNT_ID:layer:CreditCardTransactionsQualityGateDependencies:$LAYER_VERSION
+            --layers arn:aws:lambda:$AWS_REGION:${{ secrets.AWS_ACCOUNT_ID }}:layer:CreditCardTransactionsQualityGateDependencies:$LAYER_VERSION
