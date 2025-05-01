@@ -27,16 +27,11 @@ jobs:
         run: |
           python scripts/export_layer_requirements.py
 
-      - name: Install runtime dependencies into layer
-        run: |
-          mkdir -p layer/python
-          pip install -r requirements-layer.txt -t layer/python
-
       - name: Build Lambda Layer
         run: |
           mkdir -p layer/python
           pip install -r requirements-layer.txt -t layer/python
-          zip -r layer.zip layer
+          zip -r ../layer.zip python/
 
       - name: Publish Lambda Layer
         env:
