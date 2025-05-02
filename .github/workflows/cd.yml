@@ -19,6 +19,9 @@ jobs:
         with:
           python-version: '3.13'
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -35,11 +38,12 @@ jobs:
           docker run --rm \
             --platform linux/arm64 \
             -v "$PWD:/var/task" \
-            python:3.13-slim bash -c "
-              apt-get update && apt-get install -y build-essential curl
-              pip install --upgrade pip
-              mkdir -p /var/task/layer/python
-              pip install -r /var/task/requirements-layer.txt -t /var/task/layer/python
+            python:3.13-slim bash -c "\
+              apt-get update && \
+              apt-get install -y build-essential curl && \
+              pip install --upgrade pip && \
+              mkdir -p /var/task/layer/python && \
+              pip install -r /var/task/requirements-layer.txt -t /var/task/layer/python \
             "
 
       - name: Zip layer folder
