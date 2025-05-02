@@ -19,6 +19,9 @@ jobs:
         with:
           python-version: '3.13'
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Install AWS CLI
         run: |
           pip install awscli
@@ -27,13 +30,22 @@ jobs:
         run: |
           python scripts/export_layer_requirements.py
 
-      - name: Build Lambda Layer
+      - name: Build Lambda layer for ARM64
         run: |
-          mkdir -p layer/python
-          pip install -r requirements-layer.txt -t layer/python
+          docker run --rm \
+            --platform linux/arm64 \
+            -v "$PWD:/var/task" \
+            python:3.13-slim bash -c "
+              apt-get update && apt-get install -y build-essential curl
+              pip install --upgrade pip
+              mkdir -p /var/task/layer/python
+              pip install -r /var/task/requirements-layer.txt -t /var/task/layer/python
+            "
+
+      - name: Zip layer folder
+        run: |
           find layer -name "*.so" | xargs file
-          cd layer
-          zip -r ../layer.zip python/
+          cd layer && zip -r ../layer.zip python/
           cd ..
 
       - name: Publish Lambda Layer
