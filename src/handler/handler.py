@@ -5,6 +5,7 @@ import handler.storage as storage
 import handler.transform as transform
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def handle_event(event, context) -> None:
