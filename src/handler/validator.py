@@ -44,6 +44,7 @@ def load_and_validate_csv(input_path: str) -> pl.DataFrame:
     }
     expected_schema = pl.Schema(expected_schema_mapping, check_dtypes=True)
     df = pl.read_csv(input_path, schema=expected_schema, try_parse_dates=True, quote_char='"')
+    logger.info(f"Loaded {len(df)} rows from {input_path}")
 
     expected_columns = set(expected_schema_mapping.keys())
 
