@@ -87,6 +87,8 @@ def validate_is_fraud_column(df: pl.DataFrame) -> None:
 
     if invalid.len() > 0:
         raise ValueError(f"Invalid values found in is_fraud column: {invalid}")
+    else:
+        logger.info("All is_fraud values are valid")
 
 
 def validate_zip_column(df: pl.DataFrame) -> None:
@@ -101,3 +103,5 @@ def validate_zip_column(df: pl.DataFrame) -> None:
 
     if invalid.len() > 0:
         raise ValueError(f"Invalid ZIP codes found: {invalid}")
+    else:
+        logger.info("All ZIP codes are valid")
