@@ -78,8 +78,12 @@ def validate_is_fraud_column(df: pl.DataFrame) -> None:
     logger.info("Checking is_fraud values")
     is_fraud_col = df.get_column("is_fraud")
 
-    invalid = is_fraud_col.filter(~is_fraud_col.is_in([0, 1]))
-    logger.info(f"Invalid is_fraud values count: {invalid.len()}")
+    try:
+        invalid = is_fraud_col.filter(~is_fraud_col.is_in([0, 1]))
+        logger.info(f"Invalid is_fraud values count: {invalid.len()}")
+    except Exception as e:
+        logger.exception(f"is_fraud column validation failed {e}")
+        raise
 
     if invalid.len() > 0:
         raise ValueError(f"Invalid values found in is_fraud column: {invalid}")
