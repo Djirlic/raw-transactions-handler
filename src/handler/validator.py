@@ -47,20 +47,25 @@ def load_and_validate_csv(input_path: str) -> pl.DataFrame:
         df = pl.read_csv(input_path, schema=expected_schema, try_parse_dates=True, quote_char='"')
         logger.info(f"Loaded {len(df)} rows from {input_path}")
     except Exception as e:
-        logger.exception(f"Failed to load CSV with Polars: {e}")
+        logger.error(f"Failed to load CSV with Polars: {e}")
         raise
 
     expected_columns = set(expected_schema_mapping.keys())
 
-    null_only_columns = {
-        col for col in expected_columns if col in df.columns and df[col].null_count() == len(df)
-    }
+    try:
+        logger.info("Checking for null-only columns")
+        null_only_columns = {
+            col for col in expected_columns if col in df.columns and df[col].null_count() == len(df)
+        }
+    except Exception as e:
+        logger.error(f"Error checking null-only columns: {e}")
+        raise
 
     if null_only_columns:
         for col in null_only_columns:
             logger.error(f"Missing column in the DataFrame: {col}")
 
-        raise ValueError(f"Missing columns in the DataFrame: {null_only_columns}")
+        raise ValueError(f"Missing column in the DataFrame: {col}")
 
     validate_is_fraud_column(df)
     validate_zip_column(df)
@@ -70,6 +75,7 @@ def load_and_validate_csv(input_path: str) -> pl.DataFrame:
 
 
 def validate_is_fraud_column(df: pl.DataFrame) -> None:
+    logger.info("Checking is_fraud values")
     is_fraud_col = df.get_column("is_fraud")
 
     invalid = is_fraud_col.filter(~is_fraud_col.is_in([0, 1]))
@@ -79,6 +85,7 @@ def validate_is_fraud_column(df: pl.DataFrame) -> None:
 
 
 def validate_zip_column(df: pl.DataFrame) -> None:
+    logger.info("Checking ZIP codes")
     zip_col = df.get_column("zip")
     invalid = zip_col.filter(~zip_col.cast(str).str.contains(r"^\d{5}(-\d{4})?$"))
 
