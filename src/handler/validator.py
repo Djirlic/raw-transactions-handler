@@ -86,7 +86,7 @@ def validate_is_fraud_column(df: pl.DataFrame) -> None:
 
 def validate_zip_column(df: pl.DataFrame) -> None:
     logger.info("Checking ZIP codes")
-    zip_col = df.get_column("zip")
+    zip_col = df.get_column("zip").cast(str).str.zfill(5)
     invalid = zip_col.filter(~zip_col.cast(str).str.contains(r"^\d{5}(-\d{4})?$"))
 
     if invalid.len() > 0:
