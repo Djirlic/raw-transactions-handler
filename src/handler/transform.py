@@ -3,16 +3,16 @@ import logging
 import polars as pl
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
-def transform_csv_to_parquet(input_path: str, output_path: str) -> None:
+def transform_dataframe_to_parquet(dataframe: pl.DataFrame, output_path: str) -> None:
     """
-    Transform CSV file to Parquet file.
+    Transform DataFrame to Parquet file.
 
     Args:
-        input_path (str): Path to the input CSV file.
+        dataframe (pl.DataFrame): DataFrame containing the loaded CSV data.
         output_path (str): Path to the output Parquet file.
     """
-    logger.info(f"Transforming file from: {input_path} to: {output_path}")
-    df = pl.read_csv(input_path)
-    df.write_parquet(output_path)
+    logger.info(f"Transforming data to: {output_path}")
+    dataframe.write_parquet(output_path)

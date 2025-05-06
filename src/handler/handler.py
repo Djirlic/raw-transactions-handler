@@ -3,13 +3,14 @@ import urllib.parse
 
 import handler.storage as storage
 import handler.transform as transform
+import handler.validator as validator
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
 def handle_event(event, context) -> None:
-    logger.info("Starting event handling")
+    logger.debug("Starting event handling")
     record = event.get("Records", [{}])[0]
     logger.info(f"Processing record: {record}")
 
@@ -23,6 +24,9 @@ def handle_event(event, context) -> None:
     file_path = storage.download_file_from_s3(bucket_name, object_key)
     logger.info(f"File downloaded to: {file_path}")
 
+    df = validator.load_and_validate_csv(file_path)
+    logger.info(f"File validated: {file_path}")
+
     output_path = f"/tmp/{object_key}.parquet"
     logger.info(f"Transforming file to: {output_path}")
-    transform.transform_csv_to_parquet(file_path, output_path)
+    transform.transform_dataframe_to_parquet(df, output_path)

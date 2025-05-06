@@ -11,6 +11,3 @@ def setup_logging():
         datefmt="%Y-%m-%d %H:%M:%S",
         force=True,
     )
-
-
-setup_logging()
