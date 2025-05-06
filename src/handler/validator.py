@@ -94,8 +94,11 @@ def validate_is_fraud_column(df: pl.DataFrame) -> None:
 def validate_zip_column(df: pl.DataFrame) -> None:
     logger.info("Checking ZIP codes")
     try:
-        zip_col = df.get_column("zip").cast(str).str.zfill(5)
-        invalid = zip_col.filter(~zip_col.cast(str).str.contains(r"^\d{5}(-\d{4})?$"))
+        zip_col = df.get_column("zip")
+        logger.info(f"ZIP codes before zfill: {zip_col}")
+        zip_col_filled = df.get_column("zip").cast(str).str.zfill(5)
+        logger.info(f"ZIP codes after zfill: {zip_col_filled.cast(str)}")
+        invalid = zip_col_filled.filter(~zip_col_filled.cast(str).str.contains(r"^\d{5}(-\d{4})?$"))
         logger.info(f"Invalid ZIP codes count: {invalid.len()}")
     except Exception as e:
         logger.error(f"ZIP code validation failed {e}")
