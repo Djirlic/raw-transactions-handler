@@ -43,8 +43,12 @@ def load_and_validate_csv(input_path: str) -> pl.DataFrame:
         "is_fraud": pl.Int8(),
     }
     expected_schema = pl.Schema(expected_schema_mapping, check_dtypes=True)
-    df = pl.read_csv(input_path, schema=expected_schema, try_parse_dates=True, quote_char='"')
-    logger.info(f"Loaded {len(df)} rows from {input_path}")
+    try:
+        df = pl.read_csv(input_path, schema=expected_schema, try_parse_dates=True, quote_char='"')
+        logger.info(f"Loaded {len(df)} rows from {input_path}")
+    except Exception as e:
+        logger.exception(f"Failed to load CSV with Polars: {e}")
+        raise
 
     expected_columns = set(expected_schema_mapping.keys())
 
