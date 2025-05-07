@@ -27,4 +27,9 @@ def handle_event(event, context) -> None:
     df = validator.load_and_validate_csv(file_path)
     logger.info(f"File validated: {file_path}")
 
-    transform.transform_dataframe_to_parquet(df, "data.parquet")
+    parquet_file_path = transform.transform_dataframe_to_parquet(df, "data.parquet")
+    logger.info(f"File transformed to Parquet: {parquet_file_path}")
+
+    storage.upload_file_to_s3(
+        object_key.replace("raw/", "refined/").replace(".csv", ".parquet"), parquet_file_path
+    )
