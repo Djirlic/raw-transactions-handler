@@ -22,5 +22,5 @@ def test_handle(mocker):
 
     mock_download.assert_called_once_with("dummy-bucket", "dummy.csv")
     mock_validate.assert_called_once_with("/tmp/dummy.csv")
-    mock_transform.assert_called_once_with(df, "/tmp/dummy.csv.parquet")
+    mock_transform.assert_called_once_with(df, "data.parquet")
     assert result is None

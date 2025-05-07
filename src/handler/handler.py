@@ -27,6 +27,4 @@ def handle_event(event, context) -> None:
     df = validator.load_and_validate_csv(file_path)
     logger.info(f"File validated: {file_path}")
 
-    output_path = f"/tmp/{object_key}.parquet"
-    logger.info(f"Transforming file to: {output_path}")
-    transform.transform_dataframe_to_parquet(df, output_path)
+    transform.transform_dataframe_to_parquet(df, "data.parquet")

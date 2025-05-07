@@ -6,13 +6,23 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def transform_dataframe_to_parquet(dataframe: pl.DataFrame, output_path: str) -> None:
+def transform_dataframe_to_parquet(dataframe: pl.DataFrame, filename: str) -> str:
     """
     Transform DataFrame to Parquet file.
 
     Args:
         dataframe (pl.DataFrame): DataFrame containing the loaded CSV data.
-        output_path (str): Path to the output Parquet file.
+        filename (str): Filename for the output Parquet file.
+
+    Returns:
+        str: Path to the output Parquet file.
     """
-    logger.info(f"Transforming data to: {output_path}")
-    dataframe.write_parquet(output_path)
+    logger.info(f"Transforming data into {filename}")
+    tmp_path = f"/tmp/{filename}"
+    try:
+        dataframe.write_parquet(tmp_path)
+        logger.info(f"File written to {tmp_path}")
+        return tmp_path
+    except Exception as e:
+        logger.error(f"Failed to write Parquet file: {e}")
+        raise
