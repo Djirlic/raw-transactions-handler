@@ -43,5 +43,7 @@ def upload_file_to_s3(object_key: str, file_path: str) -> None:
         s3.upload_file(file_path, REFINED_BUCKET_NAME, object_key)
         logger.info(f"File successfully uploaded to s3://{REFINED_BUCKET_NAME}/{object_key}")
     except Exception as e:
-        logger.error(f"Error uploading {file_path} to s3://{REFINED_BUCKET_NAME}/{object_key}: {e}")
+        logger.exception(
+            f"Error uploading {file_path} to s3://{REFINED_BUCKET_NAME}/{object_key}: {e}"
+        )
         raise

@@ -24,5 +24,5 @@ def transform_dataframe_to_parquet(dataframe: pl.DataFrame, filename: str) -> st
         logger.info(f"File written to {tmp_path}")
         return tmp_path
     except Exception as e:
-        logger.error(f"Failed to write Parquet file: {e}")
+        logger.exception(f"Failed to write Parquet file: {e}")
         raise
