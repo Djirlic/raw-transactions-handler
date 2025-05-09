@@ -11,10 +11,10 @@ run:
 	uv run raw-transactions-handler
 
 format:
-	uv run black .
+	uv run ruff format
 
 lint:
-	uv run flake8 .
+	uv run ruff check .
 
 clean:
 	find . -type d -name '__pycache__' -exec rm -r {} +
