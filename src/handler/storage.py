@@ -22,8 +22,12 @@ def download_file_from_s3(bucket_name: str, object_key: str) -> str:
     """
     local_path = f"/tmp/{os.path.basename(object_key)}"
 
-    s3.download_file(bucket_name, object_key, local_path)
-
+    try:
+        s3.download_file(bucket_name, object_key, local_path)
+        logger.info(f"File successfully downloaded to {local_path}")
+    except Exception as e:
+        logger.exception(f"Error downloading {object_key} from bucket {bucket_name}: {e}")
+        raise
     return local_path
 
 
